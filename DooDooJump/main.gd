@@ -9,10 +9,16 @@ extends Node2D
 @export var keep_above_camera := 1400.0
 @export var delete_below_camera := 1000.0
 
+# platform type probabilities (should add up to 100)
+@export var normal_platform_chance := 70.0
+@export var moving_platform_chance := 20.0
+@export var breakable_platform_chance := 8.0
+@export var bouncy_platform_chance := 2.0
+
 # difficulty scaling
 @export var difficulty_step := 50        # score per difficulty increase
 @export var difficulty_increase := 0.12  # +12% per step
-@export var max_difficulty := 3.0        # cap so physics doesn't explode
+@export var max_difficulty := 5.0        # cap so physics doesn't explode
 
 @onready var player := $Player
 @onready var cam := $Camera2D
@@ -76,6 +82,20 @@ func spawn_platform_at(pos: Vector2):
 	var plat = platform_scene.instantiate()
 	platforms.add_child(plat)
 	plat.global_position = pos
+	
+	# Randomly assign platform type
+	var rand_val = randf() * 100.0
+	if rand_val < normal_platform_chance:
+		plat.platform_type = 0  # NORMAL
+	elif rand_val < normal_platform_chance + moving_platform_chance:
+		plat.platform_type = 1  # MOVING
+	elif rand_val < normal_platform_chance + moving_platform_chance + breakable_platform_chance:
+		plat.platform_type = 2  # BREAKABLE
+	else:
+		plat.platform_type = 3  # BOUNCY
+	
+	plat.apply_visual_style()
+	
 	return plat
 
 func spawn_platforms_if_needed():

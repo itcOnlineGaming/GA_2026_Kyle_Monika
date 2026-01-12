@@ -34,9 +34,9 @@ func _ready():
 		print("Starting with LOW speed (1.0x)")
 	else:
 		# High speed start
-		starting_multiplier = 2.0
+		starting_multiplier = 5.0
 		set_difficulty(starting_multiplier)
-		print("Starting with HIGH speed (2.0x)")
+		print("Starting with HIGH speed (5.0x)")
 
 func _physics_process(delta):
 	if not is_on_floor():
