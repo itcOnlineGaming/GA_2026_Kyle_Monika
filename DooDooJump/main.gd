@@ -18,7 +18,7 @@ extends Node2D
 # difficulty scaling
 @export var difficulty_step := 50        # score per difficulty increase
 @export var difficulty_increase := 0.12  # +12% per step
-@export var max_difficulty := 5.0        # cap so physics doesn't explode
+@export var max_difficulty := 10.0        # cap so physics doesn't explode
 
 @onready var player := $Player
 @onready var cam := $Camera2D
@@ -100,7 +100,10 @@ func spawn_platform_at(pos: Vector2):
 
 func spawn_platforms_if_needed():
 	while highest_y > cam.global_position.y - keep_above_camera:
-		var gap := randf_range(spawn_gap_min, spawn_gap_max)
+		# Increase gap based on height/score - fewer platforms as you go higher
+		var height_factor := score / 100.0  # increases with height
+		var gap_increase := height_factor * 20.0  # add up to 20 pixels per 100 score
+		var gap := randf_range(spawn_gap_min + gap_increase, spawn_gap_max + gap_increase)
 		highest_y -= gap
 
 		var x := randf_range(40.0, world_width - 40.0)

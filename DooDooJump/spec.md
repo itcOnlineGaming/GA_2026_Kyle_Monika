@@ -12,3 +12,6 @@ Hypothesis: If speed is changed the player will die sooner than when it is slowe
 example: if speed is 100, player will survive for 60 seconds,
          if speed is 200, player will survive for 30 seconds
 therefore survivability is based off of game speed
+
+Conclusion: As compared to the hypothesis the slower speed did indeed perform better, however due to a bug related to the speed multiplication with the higher 5.0 speed type this could be skewed slightly.
+After fixing this issue the tests shall be re-ran to ensure the outcome stays the same with no excuses.

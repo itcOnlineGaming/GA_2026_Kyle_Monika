@@ -52,7 +52,7 @@ func _on_body_entered(body):
 		print("Platform hit! Type: ", platform_type)
 		if platform_type == PlatformType.BOUNCY:
 			# high jump boost
-			body.velocity.y = body.base_jump_velocity * 2.5
+			body.velocity.y = body.base_jump_velocity * 25
 		elif platform_type == PlatformType.BREAKABLE:
 			# Break immediately on landing
 			print("Breaking platform!")
