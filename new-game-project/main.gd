@@ -3,10 +3,16 @@ extends Node2D
 @export var platform_scene: PackedScene
 @export var world_width := 540.0
 
+# platform spawning
 @export var spawn_gap_min := 70.0
 @export var spawn_gap_max := 120.0
 @export var keep_above_camera := 1400.0
 @export var delete_below_camera := 1000.0
+
+# difficulty scaling
+@export var difficulty_step := 50        # score per difficulty increase
+@export var difficulty_increase := 0.12  # +12% per step
+@export var max_difficulty := 3.0        # cap so physics doesn't explode
 
 @onready var player := $Player
 @onready var cam := $Camera2D
@@ -35,17 +41,24 @@ func _process(_delta):
 		reset_game()
 
 # -------------------------
-# SCORE
+# SCORE + DIFFICULTY
 # -------------------------
 
 func update_score():
 	var height: float = start_y - player.global_position.y
-
 	var new_score := int(height / 10.0)
 
 	if new_score > score:
 		score = new_score
 		score_label.text = "Score: %d" % score
+		update_difficulty()
+
+func update_difficulty():
+	var steps := score / difficulty_step
+	var multiplier := 1.0 + steps * difficulty_increase
+	multiplier = min(multiplier, max_difficulty)
+
+	player.set_difficulty(multiplier)
 
 # -------------------------
 # PLATFORM LOGIC
@@ -89,6 +102,7 @@ func reset_game():
 		start_y
 	)
 	player.velocity = Vector2.ZERO
+	player.set_difficulty(1.0)
 
 	# reset camera
 	cam.global_position.y = start_y
